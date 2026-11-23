@@ -105,18 +105,26 @@ footer a{color:var(--accent)}
    ============================================================ */
 const GAMES = [
   {
-    titel: "Klik Test",
-    omschrijving: "Hoe snel kun jij klikken? (voorbeeldspel)",
+    titel: "Click Speed Test",
+    omschrijving: "How fast can YOU click?",
     emoji: "🖱️",
     afbeelding: "",            // jouw afbeelding-link, bv. "images/klik.png"
-    label: "Voorbeeld",
+    label: "Test game",
     // Inline spel (alles in dit bestand):
     html: `<body style="margin:0;display:grid;place-items:center;height:100vh;font-family:sans-serif;background:#111;color:#fff;text-align:center">
       <div><h1 id=s style="font-size:5rem;margin:0">0</h1><p>Klik zo vaak je kunt in 10 sec</p>
       <button id=b style="font-size:1.6rem;padding:18px 40px;border-radius:14px;border:0;background:#7c3aed;color:#fff;cursor:pointer">Klik!</button></div>
       <script>let n=0,t=0;b.onclick=()=>{if(!t){t=1;setTimeout(()=>{b.disabled=1;b.textContent='Klaar!'},10000)}if(!b.disabled)s.textContent=++n}<\/script></body>`
   },
-  /* ---- PLAK HIERONDER JE NIEUWE SPEL (template uit README) ---- */
+  {
+    titel: "Minecraft Fabric",
+    omschrijving: "Minecraft 26.2 with mods!",
+    emoji: "",
+    afbeelding: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAATlBMVEVHcEwLCwwLCw0TEB0QDhYLCw0MCw8LCw0YEyYeFzEKAyMAAAZKQXGdlMTLwPjb0/ism/zt5/+/s/GFe7ZrY4ybh/t0YctVQ6GKc/Q8NldHzKHCAAAACHRSTlMAWcL//9f/2NoBBCYAAAENSURBVHgBbdOHdoMwDAVQwFTx3iv//6MVilLG6WPrsm0vmHUTO0ZwaH9bF8oPnHI6/Bz2+prkfPWF92RjobCuywanqSOsiNsi6MKPSK0lK5UX+DNprPPWEJPCiVq5EEPKSp/Ipk0JPiOm5IxmZYQagvfe5ZRCClXf0DiHF1atK17rn5hbKVphtCtGqCdGqVSpqFqpJ8aoZI9toPyPY/bB9kQsjnEAXUgIpMbHPoQ8qmMYcftDwrg+57QAFjfdCsFICra1OVvvx7pZICMkNTUiIMVqyAhZhVElzhmLMoKNkFWYdylvJDbE/aK7MfvF9mUDVnISNtiWFeBkDpfWo9tyHvTtuM+cRsPhKZ/h8Asy2Rb3FPhOWwAAAABJRU5ErkJggg==",
+    label: "Minecraft"
+  },
+  
+  
 ];
 
 /* ================= Vanaf hier hoef je niets te wijzigen ================= */
