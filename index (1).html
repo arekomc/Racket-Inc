@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Racket Inc. – Spelletjes</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%237c3aed'/%3E%3Cellipse cx='28' cy='27' rx='14' ry='17' transform='rotate(-35 28 27)' fill='none' stroke='white' stroke-width='5'/%3E%3Cpath d='M38 38l14 14' stroke='white' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--accent:#7c3aed;--bg:#0b0a12;--card:#15131f;--text:#f4f2ff;--muted:#9a96b3;--line:#ffffff14;--mx:50%;--my:30%}
+body.light{--bg:#f6f4ff;--card:#ffffff;--text:#17132a;--muted:#6c6786;--line:#00000014}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .4s,color .4s}
+h1,h2,h3,.brand{font-family:'Space Grotesk',Inter,sans-serif}
+/* achtergrond */
+.glow{position:fixed;inset:0;z-index:-1;background:radial-gradient(600px circle at var(--mx) var(--my),color-mix(in srgb,var(--accent) 28%,transparent),transparent 60%)}
+.blob{position:fixed;z-index:-2;width:46vmax;height:46vmax;border-radius:50%;filter:blur(90px);opacity:.35;background:var(--accent);animation:float 18s ease-in-out infinite}
+.b1{top:-15vmax;left:-10vmax}.b2{bottom:-20vmax;right:-12vmax;animation-delay:-9s;background:color-mix(in srgb,var(--accent) 50%,#06b6d4)}
+@keyframes float{50%{transform:translate(6vmax,5vmax) scale(1.15)}}
+/* nav */
+nav{position:sticky;top:14px;margin:14px auto 0;width:min(1100px,92%);display:flex;align-items:center;gap:14px;padding:10px 14px;border-radius:20px;background:color-mix(in srgb,var(--card) 70%,transparent);backdrop-filter:blur(16px);border:1px solid var(--line);z-index:20}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:1.15rem;text-decoration:none;color:var(--text)}
+.brand svg{width:36px;height:36px;transition:transform .5s}.brand:hover svg{transform:rotate(-20deg) scale(1.1)}
+.sp{flex:1}
+nav a.l{color:var(--muted);text-decoration:none;font-size:.9rem;transition:.2s}nav a.l:hover{color:var(--text)}
+.ctl{display:flex;align-items:center;gap:8px}
+.ctl input[type=color]{width:34px;height:34px;border:2px solid var(--line);border-radius:50%;padding:0;background:none;cursor:pointer;overflow:hidden}
+.ctl input[type=color]::-webkit-color-swatch-wrapper{padding:0}.ctl input[type=color]::-webkit-color-swatch{border:0;border-radius:50%}
+.ib{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--text);cursor:pointer;font-size:1rem;transition:.2s}.ib:hover{transform:scale(1.12) rotate(15deg)}
+/* hero */
+.hero{text-align:center;padding:90px 20px 40px}
+.pill{display:inline-block;padding:6px 14px;border-radius:99px;border:1px solid var(--line);background:color-mix(in srgb,var(--accent) 14%,transparent);font-size:.8rem;color:var(--muted);margin-bottom:22px;animation:rise .8s both}
+h1{font-size:clamp(2.6rem,8vw,5.6rem);line-height:1;letter-spacing:-.04em;animation:rise .8s .1s both}
+h1 span{background:linear-gradient(90deg,var(--accent),#22d3ee,var(--accent));background-size:200%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 5s linear infinite}
+@keyframes shine{to{background-position:200%}}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}}
+.hero p{max-width:520px;margin:22px auto 30px;color:var(--muted);font-size:1.1rem;animation:rise .8s .2s both}
+.search{width:min(420px,90%);padding:14px 20px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:1rem;outline:none;transition:.25s;animation:rise .8s .3s both}
+.search:focus{border-color:var(--accent);box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 25%,transparent)}
+/* grid */
+.grid{width:min(1100px,92%);margin:40px auto 80px;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px;perspective:1000px}
+.card{position:relative;border-radius:24px;background:var(--card);border:1px solid var(--line);overflow:hidden;cursor:pointer;opacity:0;transform:translateY(40px);transition:opacity .6s,transform .6s cubic-bezier(.2,.8,.2,1),box-shadow .3s,border-color .3s;will-change:transform}
+.card.in{opacity:1;transform:none}
+.card:hover{border-color:var(--accent);box-shadow:0 20px 50px -15px color-mix(in srgb,var(--accent) 60%,transparent)}
+.card::after{content:"";position:absolute;inset:0;background:radial-gradient(250px circle at var(--cx,50%) var(--cy,50%),#ffffff1a,transparent 60%);opacity:0;transition:.3s;pointer-events:none}
+.card:hover::after{opacity:1}
+.thumb{aspect-ratio:16/10;display:grid;place-items:center;font-size:3.4rem;background:linear-gradient(135deg,var(--accent),#22d3ee);overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover;transition:transform .6s}.card:hover .thumb img{transform:scale(1.1)}
+.info{padding:16px 18px 20px}.info h3{font-size:1.15rem}.info p{color:var(--muted);font-size:.9rem;margin-top:4px}
+.tag{position:absolute;top:12px;left:12px;padding:4px 10px;border-radius:99px;background:#0009;color:#fff;font-size:.72rem;backdrop-filter:blur(6px)}
+.none{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px}
+/* speler (blijft in dezelfde pagina) */
+.player{position:fixed;inset:0;z-index:50;display:none;flex-direction:column;background:var(--bg)}
+.player.open{display:flex;animation:pop .35s both}
+@keyframes pop{from{opacity:0;transform:scale(.96)}}
+.pbar{display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--line);background:var(--card)}
+.pbar h3{flex:1}.pbar button{padding:9px 16px;border-radius:99px;border:0;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;transition:.2s}.pbar button:hover{transform:scale(1.06)}
+.pbar .g{background:var(--line);color:var(--text)}
+.player iframe{flex:1;border:0;width:100%;background:#fff}
+footer{text-align:center;color:var(--muted);padding:30px 20px 50px;font-size:.88rem;border-top:1px solid var(--line)}
+footer a{color:var(--accent)}
+.cur{position:fixed;width:14px;height:14px;border-radius:50%;background:var(--accent);pointer-events:none;z-index:99;mix-blend-mode:screen;transition:width .2s,height .2s,opacity .2s;transform:translate(-50%,-50%);opacity:.0}
+@media(hover:none){.cur{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.card{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="glow"></div><div class="cur" id="cur"></div>
+
+<nav>
+  <a class="brand" href="#">
+    <svg viewBox="0 0 64 64"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><rect width="64" height="64" rx="18" fill="url(#lg)"/><ellipse cx="28" cy="27" rx="13" ry="17" transform="rotate(-35 28 27)" fill="none" stroke="#fff" stroke-width="5"/><path d="M20 20l16 14M25 15l14 13" stroke="#fff" stroke-width="1.6" opacity=".7"/><path d="M38 38l14 14" stroke="#fff" stroke-width="6" stroke-linecap="round"/></svg>
+    Racket Inc.
+  </a>
+  <div class="sp"></div>
+  <a class="l" href="#spelletjes">Spelletjes</a>
+  <a class="l" href="contract.pdf" target="_blank">Regels</a>
+  <div class="ctl">
+    <input type="color" id="col" value="#7c3aed" title="Kies je kleur">
+    <button class="ib" id="mode" title="Licht/donker">🌙</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="pill">✨ 100% eigen spelletjes</div>
+  <h1>Welkom bij<br><span>Racket Inc.</span></h1>
+  <p>Een speeltuin vol spelletjes, gemaakt door ons. Klik op een spel en speel direct, zonder gedoe.</p>
+  <input class="search" id="q" placeholder="Zoek een spel…" autocomplete="off">
+</header>
+
+<main class="grid" id="spelletjes"></main>
+
+<div class="player" id="player">
+  <div class="pbar"><h3 id="ptitle"></h3><button class="g" id="full">⤢ Volledig scherm</button><button id="close">✕ Sluiten</button></div>
+  <iframe id="frame" allow="fullscreen; gamepad; autoplay" title="Spel"></iframe>
+</div>
+
+<footer>© <span id="yr"></span> Racket Inc. Alle spelletjes zijn eigendom van Racket Inc. · <a href="contract.pdf" target="_blank">Lees de regels</a></footer>
+
+<script>
+/* ============================================================
+   JOUW SPELLETJES  –  voeg hier nieuwe toe (zie README.md)
+   ============================================================ */
+const GAMES = [
+  {
+    titel: "Klik Test",
+    omschrijving: "Hoe snel kun jij klikken? (voorbeeldspel)",
+    emoji: "🖱️",
+    afbeelding: "",            // jouw afbeelding-link, bv. "images/klik.png"
+    label: "Voorbeeld",
+    // Inline spel (alles in dit bestand):
+    html: `<body style="margin:0;display:grid;place-items:center;height:100vh;font-family:sans-serif;background:#111;color:#fff;text-align:center">
+      <div><h1 id=s style="font-size:5rem;margin:0">0</h1><p>Klik zo vaak je kunt in 10 sec</p>
+      <button id=b style="font-size:1.6rem;padding:18px 40px;border-radius:14px;border:0;background:#7c3aed;color:#fff;cursor:pointer">Klik!</button></div>
+      <script>let n=0,t=0;b.onclick=()=>{if(!t){t=1;setTimeout(()=>{b.disabled=1;b.textContent='Klaar!'},10000)}if(!b.disabled)s.textContent=++n}<\/script></body>`
+  },
+  /* ---- PLAK HIERONDER JE NIEUWE SPEL (template uit README) ---- */
+];
+
+/* ================= Vanaf hier hoef je niets te wijzigen ================= */
+const grid=document.getElementById('spelletjes'),player=document.getElementById('player'),frame=document.getElementById('frame');
+const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.1});
+
+function render(list){
+  grid.innerHTML='';
+  if(!list.length){grid.innerHTML='<div class="none">Geen spelletjes gevonden 😅</div>';return}
+  list.forEach((g,i)=>{
+    const c=document.createElement('div');c.className='card';c.style.transitionDelay=(i%6)*70+'ms';
+    c.innerHTML=`${g.label?`<span class="tag">${esc(g.label)}</span>`:''}
+      <div class="thumb">${g.afbeelding?`<img src="${esc(g.afbeelding)}" alt="${esc(g.titel)}" loading="lazy">`:esc(g.emoji||'🎮')}</div>
+      <div class="info"><h3>${esc(g.titel)}</h3><p>${esc(g.omschrijving)}</p></div>`;
+    c.onclick=()=>openGame(g);
+    c.onmousemove=e=>{const r=c.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;
+      c.style.setProperty('--cx',x+'px');c.style.setProperty('--cy',y+'px');
+      c.style.transform=`rotateX(${(.5-y/r.height)*10}deg) rotateY(${(x/r.width-.5)*10}deg) translateY(-6px)`};
+    c.onmouseleave=()=>c.style.transform='';
+    grid.appendChild(c);io.observe(c);
+  });
+}
+function openGame(g){
+  document.getElementById('ptitle').textContent=g.titel;
+  frame.removeAttribute('srcdoc');frame.removeAttribute('src');
+  if(g.html)frame.srcdoc=g.html;else frame.src=g.spel;
+  player.classList.add('open');document.body.style.overflow='hidden';
+}
+function closeGame(){player.classList.remove('open');frame.removeAttribute('src');frame.removeAttribute('srcdoc');document.body.style.overflow=''}
+document.getElementById('close').onclick=closeGame;
+document.getElementById('full').onclick=()=>frame.requestFullscreen&&frame.requestFullscreen();
+addEventListener('keydown',e=>{if(e.key==='Escape')closeGame()});
+document.getElementById('q').oninput=e=>{const v=e.target.value.toLowerCase();render(GAMES.filter(g=>(g.titel+g.omschrijving).toLowerCase().includes(v)))};
+render(GAMES);
+
+/* kleur & thema */
+const col=document.getElementById('col'),mode=document.getElementById('mode');
+function setAccent(v){document.documentElement.style.setProperty('--accent',v);col.value=v;try{localStorage.setItem('ri-accent',v)}catch(e){}}
+function setMode(l){document.body.classList.toggle('light',l);mode.textContent=l?'☀️':'🌙';try{localStorage.setItem('ri-light',l?1:0)}catch(e){}}
+col.oninput=e=>setAccent(e.target.value);mode.onclick=()=>setMode(!document.body.classList.contains('light'));
+try{const a=localStorage.getItem('ri-accent');if(a)setAccent(a);setMode(localStorage.getItem('ri-light')==='1')}catch(e){}
+
+/* muis-glow + cursor */
+const cur=document.getElementById('cur');
+addEventListener('pointermove',e=>{const s=document.documentElement.style;s.setProperty('--mx',e.clientX+'px');s.setProperty('--my',e.clientY+'px');cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';cur.style.opacity=.7});
+document.getElementById('yr').textContent=new Date().getFullYear();
+</script>
+</body>
+</html>
